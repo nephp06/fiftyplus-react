@@ -1,18 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import UnsplashImage from './UnsplashImage';
+import UnsplashImage from './UnsplashImage.jsx';
 import './AcademySection.css';
 
 const AcademySection = ({ courses }) => {
   return (
     <div className='academy-section-container'>
       <div className='academy-section'>
-        <div className='academy-header'>
-          <h2 className='academy-title'>
+        <div className='section-header'>
+          <h2 className='section-title'>
             <span className='highlight'>50+</span>學院
           </h2>
           <Link to='/academy' className='view-all-link'>
-            查看所有課程 <span className='arrow'>→</span>
+            查看所有課程 →
           </Link>
         </div>
 
@@ -28,13 +28,13 @@ const AcademySection = ({ courses }) => {
                 />
               </div>
               <div className='course-content'>
-                <div className='course-info'>
+                <Link to={`/course/${course.id}`} className='course-title-link'>
                   <h3 className='course-title'>{course.title}</h3>
-                  <p className='course-period'>{course.period}</p>
-                  <p className='course-location'>
-                    <span className='location-name'>{course.place}</span>
-                    <span className='location-address'>{course.address}</span>
-                  </p>
+                </Link>
+                <div className='course-period'>{course.period}</div>
+                <div className='course-location'>
+                  <div className='course-place'>{course.place}</div>
+                  <div className='course-address'>{course.address}</div>
                 </div>
                 <Link to={`/course/${course.id}`} className='course-button'>
                   了解詳情

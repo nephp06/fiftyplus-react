@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import UnsplashImage from './UnsplashImage';
+import UnsplashImage from './UnsplashImage.jsx';
 import './Carousel.css';
 
 const Carousel = ({ slides }) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import UnsplashImage from './UnsplashImage';
+import UnsplashImage from './UnsplashImage.jsx';
 import './WhatsNew.css';
 
 const WhatsNew = ({ articles }) => {

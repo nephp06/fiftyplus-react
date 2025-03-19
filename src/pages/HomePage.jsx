@@ -1,10 +1,10 @@
 import React from 'react';
-import Header from '../components/Header';
-import Carousel from '../components/Carousel';
-import WhatsNew from '../components/WhatsNew';
-import CategorySection from '../components/CategorySection';
-import AcademySection from '../components/AcademySection';
-import Footer from '../components/Footer';
+import Header from '../components/Header.jsx';
+import Carousel from '../components/Carousel.jsx';
+import WhatsNew from '../components/WhatsNew.jsx';
+import CategorySection from '../components/CategorySection.jsx';
+import AcademySection from '../components/AcademySection.jsx';
+import Footer from '../components/Footer.jsx';
 import './HomePage.css';
 
 const HomePage = () => {

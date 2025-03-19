@@ -100,10 +100,26 @@ function getRandomItem(array) {
 
 // 添加Unsplash图片参数
 export const formatUnsplashUrl = (url, width, height) => {
-  if (!url) return null;
+  if (!url) {
+    console.warn('No URL provided to formatUnsplashUrl');
+    return `https://via.placeholder.com/${width || 800}x${
+      height || 600
+    }?text=FiftyPlus`;
+  }
 
-  // 添加Unsplash参数：宽度、高度和质量
-  return `${url}?w=${width || 800}&h=${
-    height || 600
-  }&q=80&auto=format&fit=crop`;
+  try {
+    // 检查URL是否已经包含参数
+    const hasParams = url.includes('?');
+    const connector = hasParams ? '&' : '?';
+
+    // 添加Unsplash参数：宽度、高度和质量
+    return `${url}${connector}w=${width || 800}&h=${
+      height || 600
+    }&q=80&auto=format&fit=crop`;
+  } catch (error) {
+    console.error('Error formatting Unsplash URL:', error);
+    return `https://via.placeholder.com/${width || 800}x${
+      height || 600
+    }?text=FiftyPlus`;
+  }
 };

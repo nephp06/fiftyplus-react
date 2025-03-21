@@ -19,6 +19,8 @@ export const getImageUrl = (
   if (imageUrl.startsWith('/uploads')) {
     // 直接使用相對路徑，依賴Vite代理功能
     return imageUrl;
+    // 如需直接訪問，使用以下代碼
+    // return `http://localhost:5003${imageUrl}`;
   }
 
   // 其他情況返回默認圖片

@@ -14,8 +14,8 @@ const app = express();
 
 // 中间件配置
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(morgan('dev')); // 日志中间件
 
 // 静态文件服务
@@ -133,24 +133,28 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 初始化数据库并启动服务器
-const PORT = process.env.PORT || 5002;
-
-async function startServer() {
+// 启动服务器
+const startServer = async () => {
   try {
     await sequelize.authenticate();
     console.log('数据库连接成功');
 
-    // 初始化数据库并填充数据
+    // 同步数据库模型
+    await sequelize.sync({ alter: false });
+    console.log('數據庫同步完成，保留現有數據');
+
+    // 添加初始用户和文章数据
     await seedDatabase();
 
+    // 启动服务器
+    const PORT = process.env.PORT || 5003;
     app.listen(PORT, () => {
       console.log(`服务器运行在端口 ${PORT}`);
     });
   } catch (error) {
-    console.error('启动服务器时出错:', error);
+    console.error('服务器启动失败:', error);
   }
-}
+};
 
 startServer();
 

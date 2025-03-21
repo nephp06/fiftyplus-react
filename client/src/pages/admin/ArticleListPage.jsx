@@ -221,6 +221,14 @@ const ArticleListPage = () => {
                     </td>
                     <td>{formatDate(article.created_at || article.createdAt)}</td>
                     <td className="actions">
+                      <Link 
+                        to={`/article/${article.id}`}
+                        className="btn-preview"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        预览
+                      </Link>
                       <button
                         onClick={() => navigate(`/admin/articles/edit/${article.id}`)}
                         className="btn-edit"

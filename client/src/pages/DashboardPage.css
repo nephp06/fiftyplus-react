@@ -1,0 +1,72 @@
+.dashboard-test {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.dashboard-test h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #444;
+}
+
+.loading-indicator {
+  text-align: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.error-box {
+  background-color: #ffe6e6;
+  padding: 15px;
+  border-radius: 5px;
+  border-left: 4px solid #dc3545;
+  margin-bottom: 20px;
+}
+
+.api-response {
+  background-color: #f0f0f0;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  overflow: auto;
+}
+
+.api-response pre {
+  white-space: pre-wrap;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+}
+
+.stats-summary, .recent-articles {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.stats-summary h3, .recent-articles h3 {
+  margin-top: 0;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.recent-articles ul {
+  list-style: none;
+  padding: 0;
+}
+
+.recent-articles li {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.recent-articles li:last-child {
+  border-bottom: none;
+} 

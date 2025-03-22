@@ -48,6 +48,33 @@
   transition: all 0.3s ease;
 }
 
+.admin-header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.home-button {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.home-button i {
+  margin-right: 6px;
+}
+
+.home-button:hover {
+  background-color: #357abd;
+}
+
 .logout-button {
   background-color: #dc3545;
   color: white;

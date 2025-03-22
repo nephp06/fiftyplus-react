@@ -28,6 +28,9 @@ const AdminLayout = ({ children }) => {
           <h1>FiftyPlus CMS</h1>
         </div>
         <div className="admin-header-right">
+          <Link to="/" className="home-button">
+            <i className="fas fa-home"></i> 回到首頁
+          </Link>
           <button onClick={handleLogout} className="logout-button">
             退出登录
           </button>

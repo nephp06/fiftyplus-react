@@ -1,8 +1,26 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
 
 const Header = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  // 关闭菜单函数
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
+  // 切换菜单开关状态
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
+  // 当路由变化时自动关闭菜单
+  useEffect(() => {
+    closeMenu();
+  }, [location]);
+
   const navItems = [
     { id: 1, title: '學院', path: '/academy' },
     { id: 2, title: '心靈', path: '/mind' },
@@ -12,6 +30,17 @@ const Header = () => {
     { id: 6, title: '社會', path: '/society' },
     { id: 7, title: '退休理財', path: '/finance' },
     { id: 8, title: '精選專題', path: '/featured' },
+  ];
+
+  const navLinks = [
+    { title: '首頁', path: '/' },
+    { title: '人物', path: '/people' },
+    { title: '心靈', path: '/mind' },
+    { title: '健康', path: '/health' },
+    { title: '生活方式', path: '/lifestyle' },
+    { title: '財經', path: '/finance' },
+    { title: '學院', path: '/academy' },
+    { title: '播客', path: '/podcast' },
   ];
 
   return (
@@ -24,12 +53,16 @@ const Header = () => {
           </Link>
         </div>
 
-        <nav className='main-nav'>
-          <ul className='nav-list'>
-            {navItems.map((item) => (
-              <li key={item.id} className='nav-item'>
-                <Link to={item.path} className='nav-link'>
-                  {item.title}
+        <nav className={`main-nav ${menuOpen ? 'open' : ''}`}>
+          <ul className="nav-list">
+            {navLinks.map((link, index) => (
+              <li key={index} className="nav-item">
+                <Link 
+                  to={link.path} 
+                  className={`nav-link ${location.pathname === link.path ? 'active' : ''}`}
+                  onClick={closeMenu}
+                >
+                  {link.title}
                 </Link>
               </li>
             ))}
@@ -40,7 +73,7 @@ const Header = () => {
           <button className='search-button'>
             <span className='icon'>🔍</span>
           </button>
-          <button className='menu-button'>
+          <button className='menu-button' onClick={toggleMenu}>
             <span className='icon'>☰</span>
           </button>
         </div>

@@ -186,11 +186,12 @@ const ArticlePage = () => {
           <div className="article-cover">
             <div className="category-tag">
               {article.category === 'people' ? '人物' : 
-               article.category === 'mind' ? '思維' : 
+               article.category === 'mind' ? '心靈' : 
                article.category === 'health' ? '健康' : 
                article.category === 'lifestyle' ? '生活方式' :
                article.category === 'finance' ? '財經' :
-               article.category === 'podcast' ? '播客' : '新聞'}
+               article.category === 'podcast' ? '播客' : 
+               article.category === 'academy' ? '學院' : '新聞'}
             </div>
             <div className="cover-date">
               {formatChineseDate(article.date || article.created_at)}

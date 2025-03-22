@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage.jsx';
 import PeoplePage from './pages/PeoplePage.jsx';
 import AcademyPage from './pages/AcademyPage.jsx';
 import MindPage from './pages/MindPage.jsx';
+import HealthPage from './pages/HealthPage.jsx';
 import ArticlePage from './pages/ArticlePage.jsx';
 import AdminLogin from './pages/AdminLogin';
 import DashboardPage from './pages/admin/DashboardPage';
@@ -74,6 +75,7 @@ function App() {
         <Route path='/people' element={<PeoplePage />} />
         <Route path='/academy' element={<AcademyPage />} />
         <Route path='/mind' element={<MindPage />} />
+        <Route path='/health' element={<HealthPage />} />
         <Route path='/article/:id' element={<ArticlePage />} />
         
         {/* 健康檢查路由 */}

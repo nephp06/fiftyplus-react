@@ -5,6 +5,7 @@ import 'react-quill/dist/quill.snow.css';
 import { articleApi } from '../../services/api';
 import ImageUploader from '../../components/admin/ImageUploader';
 import ImageEditorModal from '../../components/admin/ImageEditorModal';
+import ImageInsertModal from '../../components/admin/ImageInsertModal';
 import AdminLayout from '../../layouts/AdminLayout/AdminLayout';
 import { getImageUrl } from '../../utils/imageUtils';
 import './ArticleEditPage.css';
@@ -33,6 +34,64 @@ if (typeof window !== 'undefined') {
   
   // 註冊resize模塊
   Quill.register('modules/imageResize', ImageResize);
+  
+  // 創建自定義圖片處理模塊
+  class CustomImageHandler {
+    constructor(quill) {
+      this.quill = quill;
+      
+      // 取得工具欄按鈕並綁定事件
+      const toolbar = quill.getModule('toolbar');
+      toolbar.addHandler('image', this.selectImage.bind(this));
+    }
+    
+    selectImage() {
+      // 創建一個對話框詢問用戶選擇上傳還是 URL 插入
+      const selection = this.quill.getSelection();
+      if (!selection) return;
+      
+      const urlInput = window.prompt('請輸入圖片URL，或點擊取消使用本地上傳:', '');
+      
+      if (urlInput) {
+        this.insertImage(urlInput, selection);
+      } else {
+        // 如果用戶點擊取消，觸發原生的文件選擇對話框
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+        
+        input.onchange = () => {
+          if (input.files && input.files[0]) {
+            // 將上傳處理邏輯保留給原生處理
+            const fileInput = input;
+            // 觸發此元素上的點擊事件，以便讓 Quill 原生處理上傳
+            this.quill.getModule('toolbar').handlers.image.call(this.quill, fileInput);
+          }
+        };
+      }
+    }
+    
+    insertImage(url, range) {
+      // 插入圖片到編輯器
+      const quill = this.quill;
+      
+      // 處理相對路徑轉換為完整 URL
+      const displayUrl = url.startsWith('http') || url.startsWith('/') ? url : getImageUrl(url);
+      
+      // 保存當前選區
+      quill.setSelection(range.index, range.length);
+      
+      // 在當前位置插入圖片
+      quill.insertEmbed(range.index, 'image', displayUrl, 'user');
+      
+      // 將光標移動到圖片後面
+      quill.setSelection(range.index + 1, 0);
+    }
+  }
+
+  // 註冊自定義模塊
+  Quill.register('modules/customImageHandler', CustomImageHandler);
 }
 
 const ArticleEditPage = () => {
@@ -60,6 +119,10 @@ const ArticleEditPage = () => {
     width: '',
     height: ''
   });
+  
+  // 添加圖片插入對話框狀態
+  const [isInsertModalOpen, setIsInsertModalOpen] = useState(false);
+  const [insertPosition, setInsertPosition] = useState(null);
   
   // 封面圖片編輯相關狀態
   const [isCoverModalOpen, setIsCoverModalOpen] = useState(false);
@@ -116,38 +179,136 @@ const ArticleEditPage = () => {
     }
   }, [loading, quillRef.current]);
 
-  // 處理圖片更新
-  const handleImageUpdate = (imageData) => {
-    if (currentImage.element && quillRef.current) {
-      const img = currentImage.element;
+  // 覆寫 Quill 默認的圖片處理
+  useEffect(() => {
+    if (quillRef.current && !loading) {
       const editor = quillRef.current.getEditor();
+      if (editor) {
+        // 獲取工具欄
+        const toolbar = editor.getModule('toolbar');
+        if (toolbar) {
+          // 覆寫圖片處理函數
+          toolbar.addHandler('image', () => {
+            // 獲取當前選擇區域
+            const range = editor.getSelection();
+            setInsertPosition(range);
+            // 打開圖片插入對話框
+            setIsInsertModalOpen(true);
+          });
+        }
+      }
+    }
+  }, [loading, quillRef.current]);
+
+  // 處理圖片插入
+  const handleImageInsert = (imageData) => {
+    if (!quillRef.current || !insertPosition) return;
+    
+    const editor = quillRef.current.getEditor();
+    
+    if (imageData.type === 'url') {
+      // 處理網絡圖片插入
+      let displayUrl = imageData.src;
       
-      // 更新圖片屬性
-      if (imageData.src) {
-        img.setAttribute('src', imageData.src);
+      // 如果不是以 http 或 / 開頭，則使用 getImageUrl 處理
+      if (!displayUrl.startsWith('http') && !displayUrl.startsWith('/')) {
+        displayUrl = getImageUrl(displayUrl);
       }
       
-      // 確保明確設置寬度和高度，而不是使用樣式
-      if (imageData.width) {
-        img.removeAttribute('width');  // 先移除舊的原生width屬性
-        img.style.width = `${imageData.width}px`;
-        // 同時設置HTML的width屬性，確保保存
-        img.setAttribute('width', imageData.width);
+      // 在選擇的位置插入圖片
+      editor.insertEmbed(insertPosition.index, 'image', displayUrl, 'user');
+      
+      // 如果有設置寬度和高度
+      if (imageData.width || imageData.height) {
+        // 獲取插入的圖片元素
+        setTimeout(() => {
+          const imgs = editor.root.querySelectorAll('img');
+          // 找到剛剛插入的圖片
+          for (let i = imgs.length - 1; i >= 0; i--) {
+            const img = imgs[i];
+            if (img.getAttribute('src') === displayUrl) {
+              // 設置尺寸
+              if (imageData.width) {
+                img.setAttribute('width', imageData.width);
+                img.style.width = `${imageData.width}px`;
+              }
+              if (imageData.height) {
+                img.setAttribute('height', imageData.height);
+                img.style.height = `${imageData.height}px`;
+              }
+              break;
+            }
+          }
+          
+          // 保存內容變更
+          handleContentChange(editor.root.innerHTML);
+        }, 50);
       }
       
-      if (imageData.height) {
-        img.removeAttribute('height');  // 先移除舊的原生height屬性
-        img.style.height = `${imageData.height}px`;
-        // 同時設置HTML的height屬性，確保保存
-        img.setAttribute('height', imageData.height);
-      }
+      // 移動光標到圖片後
+      editor.setSelection(insertPosition.index + 1, 0);
+    } else if (imageData.type === 'file' && imageData.file) {
+      // 處理本地文件上傳
+      // 使用現有的上傳處理邏輯
+      const formData = new FormData();
+      formData.append('image', imageData.file);
       
-      // 強制觸發更新，確保編輯器內容已經被修改
-      setTimeout(() => {
-        // 觸發內容變化，確保更新保存到狀態
-        console.log('更新圖片尺寸:', imageData.width, imageData.height);
-        handleContentChange(editor.root.innerHTML);
-      }, 50);
+      // 顯示臨時圖片
+      const tempUrl = URL.createObjectURL(imageData.file);
+      editor.insertEmbed(insertPosition.index, 'image', tempUrl, 'user');
+      
+      // 移動光標到圖片後
+      editor.setSelection(insertPosition.index + 1, 0);
+      
+      // 上傳圖片到服務器
+      fetch('/api/upload/image', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          // 上傳成功，替換臨時圖片為服務器圖片
+          const imgs = editor.root.querySelectorAll('img');
+          // 找到臨時圖片
+          for (let i = imgs.length - 1; i >= 0; i--) {
+            const img = imgs[i];
+            if (img.getAttribute('src') === tempUrl) {
+              // 替換圖片源
+              const serverUrl = getImageUrl(data.data.imageUrl);
+              img.setAttribute('src', serverUrl);
+              
+              // 設置尺寸
+              if (imageData.width) {
+                img.setAttribute('width', imageData.width);
+                img.style.width = `${imageData.width}px`;
+              }
+              if (imageData.height) {
+                img.setAttribute('height', imageData.height);
+                img.style.height = `${imageData.height}px`;
+              }
+              break;
+            }
+          }
+          
+          // 釋放臨時URL
+          URL.revokeObjectURL(tempUrl);
+          
+          // 保存內容變更
+          handleContentChange(editor.root.innerHTML);
+        } else {
+          console.error('上傳圖片失敗:', data.message);
+          // 顯示錯誤消息
+          setError(`上傳圖片失敗: ${data.message}`);
+        }
+      })
+      .catch(err => {
+        console.error('上傳圖片時發生錯誤:', err);
+        setError(`上傳圖片時發生錯誤: ${err.message}`);
+      });
     }
   };
 
@@ -330,6 +491,41 @@ const ArticleEditPage = () => {
     }
   };
 
+  // 處理圖片更新
+  const handleImageUpdate = (imageData) => {
+    if (currentImage.element && quillRef.current) {
+      const img = currentImage.element;
+      const editor = quillRef.current.getEditor();
+      
+      // 更新圖片屬性
+      if (imageData.src) {
+        img.setAttribute('src', imageData.src);
+      }
+      
+      // 確保明確設置寬度和高度，而不是使用樣式
+      if (imageData.width) {
+        img.removeAttribute('width');  // 先移除舊的原生width屬性
+        img.style.width = `${imageData.width}px`;
+        // 同時設置HTML的width屬性，確保保存
+        img.setAttribute('width', imageData.width);
+      }
+      
+      if (imageData.height) {
+        img.removeAttribute('height');  // 先移除舊的原生height屬性
+        img.style.height = `${imageData.height}px`;
+        // 同時設置HTML的height屬性，確保保存
+        img.setAttribute('height', imageData.height);
+      }
+      
+      // 強制觸發更新，確保編輯器內容已經被修改
+      setTimeout(() => {
+        // 觸發內容變化，確保更新保存到狀態
+        console.log('更新圖片尺寸:', imageData.width, imageData.height);
+        handleContentChange(editor.root.innerHTML);
+      }, 50);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -465,7 +661,9 @@ const ArticleEditPage = () => {
           clipboard: {
             // 允許所有HTML標籤和屬性
             matchVisual: false
-          }
+          },
+          // 添加我們的自定義圖片處理模塊
+          customImageHandler: true
         }}
         formats={[
           'header',
@@ -648,6 +846,13 @@ const ArticleEditPage = () => {
           imageUrl={article.coverImage}
           width={coverImageSize.width}
           height={coverImageSize.height}
+        />
+
+        {/* 圖片插入對話框 */}
+        <ImageInsertModal 
+          isOpen={isInsertModalOpen}
+          onClose={() => setIsInsertModalOpen(false)}
+          onInsert={handleImageInsert}
         />
       </div>
     </AdminLayout>

@@ -1,50 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import Header from '../components/Header.jsx';
 import Footer from '../components/Footer.jsx';
-import UnsplashImage from '../components/UnsplashImage.jsx';
 import { Link } from 'react-router-dom';
 import { getImageUrl } from '../utils/imageUtils';
-import './PeoplePage.css';
+import './LifestylePage.css';
 
-const PeoplePage = () => {
-  // 文章数据
-  const [peopleArticles, setPeopleArticles] = useState([]);
+const LifestylePage = () => {
+  // 文章數據
+  const [lifestyleArticles, setLifestyleArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 从服务器获取人物类别文章
+  // 從服務器獲取生活方式類別文章
   useEffect(() => {
-    const fetchPeopleArticles = async () => {
+    const fetchLifestyleArticles = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/articles/category/people');
+        const response = await fetch('/api/articles/category/lifestyle');
         const data = await response.json();
         
         if (response.ok) {
-          console.log('獲取人物文章成功:', data);
+          console.log('獲取生活方式文章成功:', JSON.stringify(data.data, null, 2));
           if (data.data && Array.isArray(data.data)) {
-            setPeopleArticles(data.data);
+            setLifestyleArticles(data.data);
           } else {
-            setPeopleArticles([]);
+            setLifestyleArticles([]);
             console.error('API返回的數據格式不正確', data);
           }
           setError(null);
         } else {
-          throw new Error(data.message || '無法獲取人物文章');
+          throw new Error(data.message || '無法獲取生活方式文章');
         }
       } catch (err) {
-        console.error('獲取人物文章出錯:', err);
+        console.error('獲取生活方式文章出錯:', err);
         setError(err.message || '獲取文章失敗，請稍後再試');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPeopleArticles();
+    fetchLifestyleArticles();
   }, []);
 
-  // 格式化阅读量
+  // 格式化閱讀量
   const formatViews = (views) => {
     if (!views && views !== 0) return '0';
     
@@ -67,48 +65,48 @@ const PeoplePage = () => {
       const month = date.getMonth() + 1;
       const day = date.getDate();
       const year = date.getFullYear();
-      return `${month}月 ${day},${year}`;
+      return `${month}月 ${day}, ${year}`;
     } catch (e) {
       console.error('日期格式化錯誤:', e);
       return '無日期';
     }
   };
 
-  // 页码控制
+  // 頁碼控制
   const [currentPage, setCurrentPage] = useState(1);
   const articlesPerPage = 10;
   
-  const totalPages = Math.ceil(peopleArticles.length / articlesPerPage);
+  const totalPages = Math.ceil(lifestyleArticles.length / articlesPerPage);
   
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo(0, 0);
   };
 
-  // 当前页的文章
-  const currentArticles = peopleArticles.slice(
+  // 當前頁的文章
+  const currentArticles = lifestyleArticles.slice(
     (currentPage - 1) * articlesPerPage,
     currentPage * articlesPerPage
   );
 
   return (
-    <div className="people-page">
+    <div className="lifestyle-page">
       <Header />
       
-      <div className="people-content container">
+      <div className="lifestyle-content container">
         <div className="breadcrumb">
           <Link to="/">首頁</Link>
           <span className="separator">/</span>
-          <span className="current">人物</span>
+          <span className="current">生活方式</span>
         </div>
         
         <div className="ad-space">
-          {/* 广告位置 */}
+          {/* 廣告位置 */}
         </div>
         
         <div className="page-title-container">
           <h1 className="page-title">
-            <span>人物</span>
+            <span>生活方式</span>
           </h1>
           
           <div className="share-buttons">
@@ -125,10 +123,10 @@ const PeoplePage = () => {
           <div className="loading-container">加載中...</div>
         ) : error ? (
           <div className="error-container">{error}</div>
-        ) : peopleArticles.length === 0 ? (
-          <div className="empty-message">暫無人物文章</div>
+        ) : lifestyleArticles.length === 0 ? (
+          <div className="empty-message">暫無生活方式文章</div>
         ) : (
-          <ul className="people-articles">
+          <ul className="lifestyle-articles">
             {currentArticles.map((article) => (
               <li key={article.id} className="article-item">
                 <div className="article-thumb">
@@ -145,28 +143,20 @@ const PeoplePage = () => {
                           console.error('文章圖片載入失敗，路徑:', e.target.src);
                           e.target.onerror = null;
                           e.target.style.display = 'none';
-                          // 當圖片載入失敗時，使用UnsplashImage作為後備
+                          // 當圖片載入失敗時，使用備用圖片
                           const container = e.target.parentElement;
-                          const unsplashImg = document.createElement('div');
-                          container.appendChild(unsplashImg);
-                          // 這裡我們需要使用React的方式來渲染UnsplashImage組件
-                          ReactDOM.render(
-                            <UnsplashImage
-                              category={article.image_category || 'person,senior'}
-                              width={350}
-                              height={240}
-                              alt={article.title}
-                            />,
-                            unsplashImg
-                          );
+                          const fallbackImg = document.createElement('img');
+                          fallbackImg.src = 'https://images.unsplash.com/photo-1513694203232-719a280e022f';
+                          fallbackImg.alt = article.title;
+                          fallbackImg.className = 'article-thumb-image';
+                          container.appendChild(fallbackImg);
                         }}
                       />
                     ) : (
-                      <UnsplashImage 
-                        category={article.image_category || article.imageCategory || 'person,senior'} 
-                        width={350} 
-                        height={240} 
-                        alt={article.title} 
+                      <img
+                        className="article-thumb-image"
+                        src="https://images.unsplash.com/photo-1513694203232-719a280e022f"
+                        alt={article.title}
                       />
                     )}
                   </Link>
@@ -234,4 +224,4 @@ const PeoplePage = () => {
   );
 };
 
-export default PeoplePage; 
+export default LifestylePage; 

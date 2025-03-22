@@ -1,11 +1,11 @@
-.people-page {
+.mind-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: var(--very-light-bg);
 }
 
-.people-content {
+.mind-content {
   flex: 1;
   padding: 20px 0 60px;
 }
@@ -98,7 +98,7 @@
 }
 
 /* 文章列表 */
-.people-articles {
+.mind-articles {
   display: flex;
   flex-direction: column;
   gap: 30px;
@@ -230,6 +230,27 @@
   color: var(--white);
 }
 
+/* 加載和錯誤狀態 */
+.loading-container, 
+.error-container,
+.empty-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  font-size: 16px;
+  color: var(--gray-text);
+  background-color: var(--white);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.error-container {
+  color: #ff4d4f;
+  background-color: #fff2f0;
+}
+
 /* 响应式设计 */
 @media (max-width: 992px) {
   .article-item {
@@ -247,13 +268,22 @@
   }
 }
 
-@media (max-width: 576px) {
-  .people-content {
+@media (max-width: 768px) {
+  .mind-content {
     padding: 15px 0 40px;
+  }
+  
+  .ad-space {
+    height: 60px;
+    margin-bottom: 20px;
   }
   
   .page-title {
     font-size: 20px;
+  }
+  
+  .article-item {
+    margin-bottom: 20px;
   }
   
   .article-thumb {
@@ -261,15 +291,10 @@
   }
   
   .article-info {
-    padding: 20px;
-  }
-  
-  .article-title {
-    font-size: 16px;
-    margin-bottom: 15px;
+    padding: 15px;
   }
   
   .pagination {
-    flex-wrap: wrap;
+    gap: 5px;
   }
 } 

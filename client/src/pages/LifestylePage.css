@@ -1,11 +1,11 @@
-.people-page {
+.lifestyle-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: var(--very-light-bg);
 }
 
-.people-content {
+.lifestyle-content {
   flex: 1;
   padding: 20px 0 60px;
 }
@@ -98,11 +98,13 @@
 }
 
 /* 文章列表 */
-.people-articles {
+.lifestyle-articles {
   display: flex;
   flex-direction: column;
   gap: 30px;
   margin-bottom: 40px;
+  list-style: none;
+  padding: 0;
 }
 
 .article-item {
@@ -153,13 +155,6 @@
   flex-direction: column;
 }
 
-.article-date {
-  font-size: 14px;
-  color: var(--gray-text);
-  margin-bottom: 15px;
-  font-weight: 500;
-}
-
 .article-title {
   font-size: 20px;
   font-weight: 600;
@@ -181,6 +176,8 @@
   margin-top: auto;
   display: flex;
   align-items: center;
+  list-style: none;
+  padding: 0;
 }
 
 .article-views {
@@ -193,6 +190,27 @@
 
 .article-views i {
   font-size: 16px;
+}
+
+/* 加載和錯誤狀態 */
+.loading-container, 
+.error-container,
+.empty-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  font-size: 16px;
+  color: var(--gray-text);
+  background-color: var(--white);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.error-container {
+  color: #ff4d4f;
+  background-color: #fff2f0;
 }
 
 /* 分页 */
@@ -247,8 +265,8 @@
   }
 }
 
-@media (max-width: 576px) {
-  .people-content {
+@media (max-width: 768px) {
+  .lifestyle-content {
     padding: 15px 0 40px;
   }
   
@@ -261,15 +279,10 @@
   }
   
   .article-info {
-    padding: 20px;
-  }
-  
-  .article-title {
-    font-size: 16px;
-    margin-bottom: 15px;
+    padding: 15px;
   }
   
   .pagination {
-    flex-wrap: wrap;
+    gap: 5px;
   }
 } 

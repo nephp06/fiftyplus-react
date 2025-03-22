@@ -4,9 +4,36 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { articleApi } from '../../services/api';
 import ImageUploader from '../../components/admin/ImageUploader';
+import ImageEditorModal from '../../components/admin/ImageEditorModal';
 import AdminLayout from '../../layouts/AdminLayout/AdminLayout';
 import { getImageUrl } from '../../utils/imageUtils';
 import './ArticleEditPage.css';
+
+// 導入圖片調整模塊
+import ImageResize from 'quill-image-resize-module-react';
+
+// 註冊Quill模塊
+if (typeof window !== 'undefined') {
+  const Quill = ReactQuill.Quill;
+  
+  // 擴展Quill的白名單，允許圖片的width和height屬性
+  const Image = Quill.import('formats/image');
+  // 添加需要保留的屬性到白名單
+  Image.sanitize = function(url) {
+    return url;
+  };
+  Image.formats = function(domNode) {
+    return {
+      src: domNode.getAttribute('src'),
+      width: domNode.getAttribute('width'),
+      height: domNode.getAttribute('height')
+    };
+  };
+  Quill.register(Image, true);
+  
+  // 註冊resize模塊
+  Quill.register('modules/imageResize', ImageResize);
+}
 
 const ArticleEditPage = () => {
   const { id } = useParams();
@@ -24,6 +51,15 @@ const ArticleEditPage = () => {
   const [error, setError] = useState('');
   const quillRef = useRef(null);
   const [quillLoaded, setQuillLoaded] = useState(false);
+  
+  // 添加圖片編輯對話框相關狀態
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImage, setCurrentImage] = useState({
+    element: null,
+    src: '',
+    width: '',
+    height: ''
+  });
 
   useEffect(() => {
     if (id) {
@@ -40,6 +76,76 @@ const ArticleEditPage = () => {
       }
     };
   }, [id]);
+
+  // 圖片點擊處理器
+  useEffect(() => {
+    if (quillRef.current && !loading) {
+      const editor = quillRef.current.getEditor();
+      if (editor) {
+        // 為編輯器內容區添加點擊事件監聽
+        const handleImageClick = (e) => {
+          // 檢查點擊的是否為圖片元素
+          if (e.target && e.target.tagName === 'IMG') {
+            const img = e.target;
+            
+            // 設置當前編輯的圖片
+            setCurrentImage({
+              element: img,
+              src: img.getAttribute('src'),
+              width: img.style.width || img.width,
+              height: img.style.height || img.height
+            });
+            
+            // 打開編輯對話框
+            setIsModalOpen(true);
+          }
+        };
+        
+        // 添加事件監聽器
+        editor.root.addEventListener('click', handleImageClick);
+        
+        // 在組件清理時移除事件監聽器
+        return () => {
+          editor.root.removeEventListener('click', handleImageClick);
+        };
+      }
+    }
+  }, [loading, quillRef.current]);
+
+  // 處理圖片更新
+  const handleImageUpdate = (imageData) => {
+    if (currentImage.element && quillRef.current) {
+      const img = currentImage.element;
+      const editor = quillRef.current.getEditor();
+      
+      // 更新圖片屬性
+      if (imageData.src) {
+        img.setAttribute('src', imageData.src);
+      }
+      
+      // 確保明確設置寬度和高度，而不是使用樣式
+      if (imageData.width) {
+        img.removeAttribute('width');  // 先移除舊的原生width屬性
+        img.style.width = `${imageData.width}px`;
+        // 同時設置HTML的width屬性，確保保存
+        img.setAttribute('width', imageData.width);
+      }
+      
+      if (imageData.height) {
+        img.removeAttribute('height');  // 先移除舊的原生height屬性
+        img.style.height = `${imageData.height}px`;
+        // 同時設置HTML的height屬性，確保保存
+        img.setAttribute('height', imageData.height);
+      }
+      
+      // 強制觸發更新，確保編輯器內容已經被修改
+      setTimeout(() => {
+        // 觸發內容變化，確保更新保存到狀態
+        console.log('更新圖片尺寸:', imageData.width, imageData.height);
+        handleContentChange(editor.root.innerHTML);
+      }, 50);
+    }
+  };
 
   useEffect(() => {
     // 确保编辑器在加载后能正常工作
@@ -170,12 +276,49 @@ const ArticleEditPage = () => {
     e.preventDefault();
     try {
       setLoading(true);
+      
+      // 確保圖片尺寸設置被保存
+      let processedContent = article.content;
+      if (quillRef.current) {
+        // 查找所有帶有樣式寬度/高度的圖片，確保它們同時具有width/height屬性
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = article.content;
+        const images = tempDiv.querySelectorAll('img');
+        
+        let contentChanged = false;
+        images.forEach(img => {
+          // 從style樣式中提取寬度和高度
+          const style = img.getAttribute('style') || '';
+          const widthMatch = style.match(/width:\s*(\d+)px/);
+          const heightMatch = style.match(/height:\s*(\d+)px/);
+          
+          if (widthMatch && !img.hasAttribute('width')) {
+            img.setAttribute('width', widthMatch[1]);
+            contentChanged = true;
+          }
+          
+          if (heightMatch && !img.hasAttribute('height')) {
+            img.setAttribute('height', heightMatch[1]);
+            contentChanged = true;
+          }
+        });
+        
+        if (contentChanged) {
+          processedContent = tempDiv.innerHTML;
+          // 更新article狀態中的content
+          setArticle(prev => ({
+            ...prev,
+            content: processedContent
+          }));
+        }
+      }
+      
       console.log('提交文章数据:', article);
       
       const token = localStorage.getItem('token');
       const formData = {
         title: article.title,
-        content: article.content,
+        content: processedContent, // 使用處理後的內容
         summary: article.summary,
         tags: article.tags,
         category: article.category,
@@ -250,13 +393,28 @@ const ArticleEditPage = () => {
             [{ 'list': 'ordered'}, { 'list': 'bullet' }],
             ['link', 'image'],
             ['clean']
-          ]
+          ],
+          // 添加圖片調整模塊
+          imageResize: {
+            // 使用基本配置避免複雜設置導致錯誤
+            modules: ['Resize', 'DisplaySize'],
+            handleStyles: {
+              backgroundColor: 'black',
+              border: 'none',
+              color: 'white'
+            }
+          },
+          clipboard: {
+            // 允許所有HTML標籤和屬性
+            matchVisual: false
+          }
         }}
         formats={[
           'header',
           'bold', 'italic', 'underline', 'strike',
           'list', 'bullet',
-          'link', 'image'
+          'link', 'image',
+          'width', 'height', 'style' // 添加寬度和高度格式
         ]}
         placeholder="请输入文章内容..."
       />
@@ -404,6 +562,16 @@ const ArticleEditPage = () => {
             </button>
           </div>
         </form>
+
+        {/* 添加圖片編輯對話框 */}
+        <ImageEditorModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleImageUpdate}
+          imageUrl={currentImage.src}
+          width={currentImage.width}
+          height={currentImage.height}
+        />
       </div>
     </AdminLayout>
   );

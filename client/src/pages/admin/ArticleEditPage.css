@@ -192,4 +192,46 @@
   min-height: 400px;
   font-size: 16px;
   color: #666;
+}
+
+/* 图片调整工具栏的样式 */
+.quill .ql-editor .image-tool {
+  position: absolute;
+  display: flex;
+  gap: 5px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+
+.quill .ql-editor .image-tool button {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 3px 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.quill .ql-editor .image-tool button:hover {
+  background-color: #f8f8f8;
+}
+
+/* 图片调整手柄的样式 */
+.quill .ql-editor .image-resize-handle {
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: #007bff;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 100;
+}
+
+/* 给可调整的图片添加边框，表示它们是可调整的 */
+.quill .ql-editor img.is-selected {
+  border: 2px solid #007bff;
 } 

@@ -201,6 +201,7 @@ const ArticleListPage = () => {
           <table>
             <thead>
               <tr>
+                <th>ID</th>
                 <th>标题</th>
                 <th>分类</th>
                 <th>状态</th>
@@ -212,6 +213,7 @@ const ArticleListPage = () => {
               {articles.length > 0 ? (
                 articles.map(article => (
                   <tr key={article.id}>
+                    <td>{article.id}</td>
                     <td>{article.title}</td>
                     <td>{article.category}</td>
                     <td>
@@ -246,7 +248,7 @@ const ArticleListPage = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="no-data">暂无数据</td>
+                  <td colSpan="6" className="no-data">暂无数据</td>
                 </tr>
               )}
             </tbody>

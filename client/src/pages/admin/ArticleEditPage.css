@@ -13,6 +13,18 @@
   color: #333;
 }
 
+.article-id {
+  display: inline-block;
+  font-size: 0.75em;
+  color: #666;
+  background-color: #f0f0f0;
+  padding: 0.2em 0.5em;
+  border-radius: 3px;
+  margin-left: 0.5em;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
 .error-message {
   background-color: #fff2f0;
   border: 1px solid #ffccc7;

@@ -109,7 +109,9 @@ const DashboardPage = () => {
                   <div key={article.id} className="article-card">
                     <div className="article-info">
                       <h3>
-                        <Link to={`/admin/articles/edit/${article.id}`}>{article.title}</Link>
+                        <Link to={`/admin/articles/edit/${article.id}`}>
+                          <span className="article-id">ID: {article.id}</span> {article.title}
+                        </Link>
                       </h3>
                       <div className="article-meta">
                         <span className={`status-badge ${article.status}`}>

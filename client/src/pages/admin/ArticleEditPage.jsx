@@ -721,7 +721,13 @@ const ArticleEditPage = () => {
     <AdminLayout>
       <div className="article-edit-page">
         <div className="page-header">
-          <h1>{id ? '编辑文章' : '创建文章'}</h1>
+          <h1>
+            {id ? (
+              <>
+                編輯文章 <span className="article-id">ID: {id}</span>
+              </>
+            ) : '創建文章'}
+          </h1>
         </div>
 
         {error && (

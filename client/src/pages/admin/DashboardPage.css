@@ -283,7 +283,18 @@ tr:hover {
 }
 
 .article-info h3 a:hover {
-  color: #4a90e2;
+  color: #1565c0;
+}
+
+.article-id {
+  display: inline-block;
+  font-size: 0.85em;
+  color: #666;
+  background-color: #f0f0f0;
+  padding: 0.2em 0.5em;
+  border-radius: 3px;
+  margin-right: 0.5em;
+  font-weight: normal;
 }
 
 .article-meta {

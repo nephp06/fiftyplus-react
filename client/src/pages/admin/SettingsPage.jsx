@@ -6,7 +6,7 @@ const SettingsPage = () => {
   const [settings, setSettings] = useState({
     siteName: 'HeartWise',
     siteDescription: 'HeartWise - 从心出发，精彩续写人生新篇',
-    contactEmail: 'info@heartwise.com',
+    contactEmail: 'info@heartwise.com.tw',
     articlesPerPage: 10,
     enableComments: true,
     maintenance: false,
@@ -55,7 +55,7 @@ const SettingsPage = () => {
       setSettings({
         siteName: 'HeartWise',
         siteDescription: 'HeartWise - 从心出发，精彩续写人生新篇',
-        contactEmail: 'info@heartwise.com',
+        contactEmail: 'info@heartwise.com.tw',
         articlesPerPage: 10,
         enableComments: true,
         maintenance: false,

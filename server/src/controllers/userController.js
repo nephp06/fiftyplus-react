@@ -257,21 +257,21 @@ exports.seedUsers = async () => {
       await User.bulkCreate([
         {
           username: 'admin',
-          email: 'admin@heartwise.com',
+          email: 'admin@heartwise.com.tw',
           password: adminPassword,
           role: 'admin',
           created_at: new Date('2023-01-01'),
         },
         {
           username: 'editor',
-          email: 'editor@heartwise.com',
+          email: 'editor@heartwise.com.tw',
           password: editorPassword,
           role: 'editor',
           created_at: new Date('2023-01-05'),
         },
         {
           username: 'writer',
-          email: 'writer@heartwise.com',
+          email: 'writer@heartwise.com.tw',
           password: writerPassword,
           role: 'writer',
           created_at: new Date('2023-02-10'),

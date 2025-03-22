@@ -68,7 +68,7 @@ const Footer = () => {
 
         <div className='footer-bottom'>
           <div className='copyright'>© 2025 心智達股份有限公司</div>
-          <div className='contact-email'>服務信箱：heartwise@cwgv.com.tw</div>
+          <div className='contact-email'>服務信箱：heartwise@heartwise.com.tw</div>
         </div>
       </div>
     </footer>

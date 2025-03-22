@@ -61,7 +61,7 @@ const AboutPage = () => {
             <strong>公司名稱：</strong>心智達股份有限公司<br />
             <strong>地址：</strong>台北市信義區松仁路100號<br />
             <strong>電話：</strong>(02) 2345-6789<br />
-            <strong>服務信箱：</strong>heartwise@cwgv.com.tw
+            <strong>服務信箱：</strong>heartwise@heartwise.com.tw
           </p>
         </div>
       </div>

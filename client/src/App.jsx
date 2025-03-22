@@ -5,6 +5,9 @@ import PeoplePage from './pages/PeoplePage.jsx';
 import AcademyPage from './pages/AcademyPage.jsx';
 import MindPage from './pages/MindPage.jsx';
 import HealthPage from './pages/HealthPage.jsx';
+import LifestylePage from './pages/LifestylePage.jsx';
+import FinancePage from './pages/FinancePage.jsx';
+import AboutPage from './pages/AboutPage.jsx';
 import ArticlePage from './pages/ArticlePage.jsx';
 import AdminLogin from './pages/AdminLogin';
 import DashboardPage from './pages/admin/DashboardPage';
@@ -76,10 +79,13 @@ function App() {
         <Route path='/academy' element={<AcademyPage />} />
         <Route path='/mind' element={<MindPage />} />
         <Route path='/health' element={<HealthPage />} />
+        <Route path='/lifestyle' element={<LifestylePage />} />
+        <Route path='/finance' element={<FinancePage />} />
+        <Route path='/about' element={<AboutPage />} />
         <Route path='/article/:id' element={<ArticlePage />} />
         
         {/* 健康檢查路由 */}
-        <Route path='/health' element={<HealthCheck />} />
+        <Route path='/health-check' element={<HealthCheck />} />
         
         {/* 后台路由 */}
         <Route path='/admin/login' element={<AdminLogin />} />

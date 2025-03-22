@@ -12,6 +12,15 @@ export const getImageUrl = (
 
   // 如果是完整的URL（以http或https開頭）
   if (imageUrl.startsWith('http')) {
+    // 確保Unsplash圖片具有較好的質量和合適的大小
+    if (imageUrl.includes('unsplash.com')) {
+      // 如果已經包含參數，不添加新參數
+      if (imageUrl.includes('?')) {
+        return imageUrl;
+      }
+      // 添加質量和裁剪參數
+      return `${imageUrl}?q=80&w=800&h=600&auto=format&fit=crop`;
+    }
     return imageUrl;
   }
 

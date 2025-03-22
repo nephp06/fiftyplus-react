@@ -20,10 +20,12 @@ const formatArticle = (article) => {
       : [],
     category: data.category,
     imageCategory: data.image_category || 'article',
+    image_category: data.image_category || 'article',
     author: data.author,
     photographer: data.photographer || '編輯部',
     editor: data.editor || '編輯部',
     date: new Date(data.created_at).toLocaleDateString('zh-TW'),
+    created_at: data.created_at,
     views: data.views || 0,
     status: data.status,
     image_url: data.image_url || '',
@@ -139,7 +141,7 @@ exports.getArticle = async (req, res) => {
         id: { [Op.ne]: id },
         status: 'published',
       },
-      attributes: ['id', 'title', 'image_category', 'views'],
+      attributes: ['id', 'title', 'image_category', 'views', 'image_url'],
       limit: 2,
     });
 
@@ -149,6 +151,7 @@ exports.getArticle = async (req, res) => {
       title: related.title,
       imageCategory: related.image_category || 'article',
       views: related.views || 0,
+      image_url: related.image_url || '',
     }));
 
     console.log('成功获取文章及相关文章');
@@ -420,6 +423,26 @@ exports.getHomePageData = async (req, res) => {
       limit: 3,
     });
 
+    // 获取财经类别文章
+    const financeArticles = await Article.findAll({
+      where: {
+        category: 'finance',
+        status: 'published',
+      },
+      order: [['created_at', 'DESC']],
+      limit: 3,
+    });
+
+    // 获取播客类别文章
+    const podcastArticles = await Article.findAll({
+      where: {
+        category: 'podcast',
+        status: 'published',
+      },
+      order: [['created_at', 'DESC']],
+      limit: 3,
+    });
+
     // 格式化并返回数据
     res.json({
       success: true,
@@ -432,6 +455,8 @@ exports.getHomePageData = async (req, res) => {
         mind: mindArticles.map(formatArticle),
         health: healthArticles.map(formatArticle),
         lifestyle: lifestyleArticles.map(formatArticle),
+        finance: financeArticles.map(formatArticle),
+        podcast: podcastArticles.map(formatArticle),
       },
     });
   } catch (err) {
@@ -440,6 +465,39 @@ exports.getHomePageData = async (req, res) => {
       success: false,
       message: '获取首页数据失败',
       error: err.message,
+    });
+  }
+};
+
+// 獲取特定分類的所有文章
+exports.getArticlesByCategory = async (req, res) => {
+  const { categoryName } = req.params;
+  console.log(`獲取 ${categoryName} 分類的文章`);
+
+  try {
+    // 獲取對應分類的所有已發佈文章
+    const articles = await Article.findAll({
+      where: {
+        category: categoryName,
+        status: 'published',
+      },
+      order: [['created_at', 'DESC']],
+    });
+
+    // 格式化並返回數據
+    const formattedArticles = articles.map(formatArticle);
+
+    console.log(`找到 ${articles.length} 篇 ${categoryName} 分類的文章`);
+    return res.json({
+      success: true,
+      data: formattedArticles,
+    });
+  } catch (error) {
+    console.error(`獲取 ${categoryName} 分類文章失敗:`, error);
+    return res.status(500).json({
+      success: false,
+      message: `獲取 ${categoryName} 分類文章失敗`,
+      error: error.message,
     });
   }
 };

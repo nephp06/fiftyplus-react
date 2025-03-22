@@ -47,69 +47,6 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// 简化的首页API
-app.get('/api/homepage', (req, res) => {
-  console.log('正在处理 /api/homepage 请求');
-
-  // 超级简化的测试数据
-  const data = {
-    people: [
-      {
-        id: 1,
-        title: '人物文章1',
-        content: '这是人物文章1的内容',
-        category: 'people',
-        image_url:
-          'https://images.unsplash.com/photo-1438761681033-6461ffad8d80',
-        image_category: 'person',
-        views: 100,
-        created_at: '2023-01-01',
-      },
-      {
-        id: 2,
-        title: '人物文章2',
-        content: '这是人物文章2的内容',
-        category: 'people',
-        image_url:
-          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e',
-        image_category: 'person',
-        views: 200,
-        created_at: '2023-01-02',
-      },
-    ],
-    hot: [
-      {
-        id: 3,
-        title: '热门文章1',
-        content: '这是热门文章1的内容',
-        category: 'hot',
-        image_url:
-          'https://images.unsplash.com/photo-1501854140801-50d01698950b',
-        image_category: 'nature',
-        views: 300,
-        created_at: '2023-01-03',
-      },
-      {
-        id: 4,
-        title: '热门文章2',
-        content: '这是热门文章2的内容',
-        category: 'hot',
-        image_url:
-          'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05',
-        image_category: 'nature',
-        views: 400,
-        created_at: '2023-01-04',
-      },
-    ],
-  };
-
-  // 输出响应前的数据内容
-  console.log('返回数据成功');
-
-  // 直接响应
-  res.json(data);
-});
-
 // 其他API路由
 app.use('/api', articleRoutes);
 app.use('/api/categories', categoryRoutes);

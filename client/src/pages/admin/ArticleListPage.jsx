@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { articleApi } from '../../services/api';
+import { articleApi, categoryApi } from '../../services/api';
 import AdminLayout from '../../layouts/AdminLayout/AdminLayout';
 import './ArticleListPage.css';
 
@@ -17,9 +17,11 @@ const ArticleListPage = () => {
     limit: 10
   });
   const [total, setTotal] = useState(0);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     loadArticles();
+    loadCategories();
   }, [filters]);
 
   const loadArticles = async () => {
@@ -65,6 +67,19 @@ const ArticleListPage = () => {
       setError(`加载文章列表失败: ${err.message}`);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadCategories = async () => {
+    try {
+      const response = await categoryApi.getAll();
+      if (response && response.success) {
+        setCategories(response.data || []);
+      } else {
+        console.error('获取分类失败:', response?.message);
+      }
+    } catch (err) {
+      console.error('加载分类错误:', err);
     }
   };
 
@@ -189,10 +204,20 @@ const ArticleListPage = () => {
               className="filter-select"
             >
               <option value="all">所有分类</option>
-              <option value="news">新闻</option>
-              <option value="people">人物</option>
-              <option value="culture">文化</option>
-              <option value="lifestyle">生活方式</option>
+              {categories.length > 0 ? (
+                categories.map(category => (
+                  <option key={category.id} value={category.name}>
+                    {category.displayName}
+                  </option>
+                ))
+              ) : (
+                <>
+                  <option value="news">新闻</option>
+                  <option value="people">人物</option>
+                  <option value="culture">文化</option>
+                  <option value="lifestyle">生活方式</option>
+                </>
+              )}
             </select>
           </div>
         </div>

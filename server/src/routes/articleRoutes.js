@@ -8,6 +8,12 @@ router.get('/homepage', articleController.getHomePageData);
 // 获取所有文章
 router.get('/articles', articleController.getAllArticles);
 
+// 获取按分类的文章
+router.get(
+  '/articles/category/:categoryName',
+  articleController.getArticlesByCategory
+);
+
 // 获取单个文章
 router.get('/articles/:id', articleController.getArticle);
 

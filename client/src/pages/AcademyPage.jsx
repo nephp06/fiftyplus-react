@@ -5,43 +5,43 @@ import Footer from '../components/Footer.jsx';
 import UnsplashImage from '../components/UnsplashImage.jsx';
 import { Link } from 'react-router-dom';
 import { getImageUrl } from '../utils/imageUtils';
-import './PeoplePage.css';
+import './AcademyPage.css';
 
-const PeoplePage = () => {
+const AcademyPage = () => {
   // 文章数据
-  const [peopleArticles, setPeopleArticles] = useState([]);
+  const [academyArticles, setAcademyArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 从服务器获取人物类别文章
+  // 从服务器获取学院类别文章
   useEffect(() => {
-    const fetchPeopleArticles = async () => {
+    const fetchAcademyArticles = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/articles/category/people');
+        const response = await fetch('/api/articles/category/academy');
         const data = await response.json();
         
         if (response.ok) {
-          console.log('獲取人物文章成功:', data);
+          console.log('獲取學院文章成功:', data);
           if (data.data && Array.isArray(data.data)) {
-            setPeopleArticles(data.data);
+            setAcademyArticles(data.data);
           } else {
-            setPeopleArticles([]);
+            setAcademyArticles([]);
             console.error('API返回的數據格式不正確', data);
           }
           setError(null);
         } else {
-          throw new Error(data.message || '無法獲取人物文章');
+          throw new Error(data.message || '無法獲取學院文章');
         }
       } catch (err) {
-        console.error('獲取人物文章出錯:', err);
+        console.error('獲取學院文章出錯:', err);
         setError(err.message || '獲取文章失敗，請稍後再試');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPeopleArticles();
+    fetchAcademyArticles();
   }, []);
 
   // 格式化阅读量
@@ -78,7 +78,7 @@ const PeoplePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const articlesPerPage = 10;
   
-  const totalPages = Math.ceil(peopleArticles.length / articlesPerPage);
+  const totalPages = Math.ceil(academyArticles.length / articlesPerPage);
   
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -86,20 +86,20 @@ const PeoplePage = () => {
   };
 
   // 当前页的文章
-  const currentArticles = peopleArticles.slice(
+  const currentArticles = academyArticles.slice(
     (currentPage - 1) * articlesPerPage,
     currentPage * articlesPerPage
   );
 
   return (
-    <div className="people-page">
+    <div className="academy-page">
       <Header />
       
-      <div className="people-content container">
+      <div className="academy-content container">
         <div className="breadcrumb">
           <Link to="/">首頁</Link>
           <span className="separator">/</span>
-          <span className="current">人物</span>
+          <span className="current">學院</span>
         </div>
         
         <div className="ad-space">
@@ -108,7 +108,7 @@ const PeoplePage = () => {
         
         <div className="page-title-container">
           <h1 className="page-title">
-            <span>人物</span>
+            <span>學院</span>
           </h1>
           
           <div className="share-buttons">
@@ -125,10 +125,10 @@ const PeoplePage = () => {
           <div className="loading-container">加載中...</div>
         ) : error ? (
           <div className="error-container">{error}</div>
-        ) : peopleArticles.length === 0 ? (
-          <div className="empty-message">暫無人物文章</div>
+        ) : academyArticles.length === 0 ? (
+          <div className="empty-message">暫無學院文章</div>
         ) : (
-          <ul className="people-articles">
+          <ul className="academy-articles">
             {currentArticles.map((article) => (
               <li key={article.id} className="article-item">
                 <div className="article-thumb">
@@ -149,7 +149,7 @@ const PeoplePage = () => {
                           // 這裡我們需要使用React的方式來渲染UnsplashImage組件
                           ReactDOM.render(
                             <UnsplashImage
-                              category={article.image_category || 'person,senior'}
+                              category={article.image_category || 'education,academy'}
                               width={350}
                               height={240}
                               alt={article.title}
@@ -160,7 +160,7 @@ const PeoplePage = () => {
                       />
                     ) : (
                       <UnsplashImage 
-                        category={article.image_category || article.imageCategory || 'person,senior'} 
+                        category={article.image_category || article.imageCategory || 'education,academy'} 
                         width={350} 
                         height={240} 
                         alt={article.title} 
@@ -234,4 +234,4 @@ const PeoplePage = () => {
   );
 };
 
-export default PeoplePage; 
+export default AcademyPage; 

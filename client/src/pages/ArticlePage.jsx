@@ -56,6 +56,23 @@ const ArticlePage = () => {
     checkAdminStatus();
   }, []);
 
+  // 新增一個中文日期格式化函數，與首頁一致
+  const formatChineseDate = (dateString) => {
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return '無日期';
+      }
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const year = date.getFullYear();
+      return `${month}月 ${day},${year}`;
+    } catch (e) {
+      console.error('日期格式化錯誤:', e);
+      return '無日期';
+    }
+  };
+
   useEffect(() => {
     const fetchArticle = async () => {
       try {
@@ -150,7 +167,7 @@ const ArticlePage = () => {
           
           <div className="article-meta">
             <div className="article-info">
-              <span className="article-date">{format(new Date(article.date), 'MMM d, yyyy')}</span>
+              <span className="article-date">{formatChineseDate(article.date || article.created_at)}</span>
               <span className="article-views">
                 <i className="fas fa-eye"></i> {formatNumber(article.views)}
               </span>
@@ -167,6 +184,17 @@ const ArticlePage = () => {
           </div>
           
           <div className="article-cover">
+            <div className="category-tag">
+              {article.category === 'people' ? '人物' : 
+               article.category === 'mind' ? '思維' : 
+               article.category === 'health' ? '健康' : 
+               article.category === 'lifestyle' ? '生活方式' :
+               article.category === 'finance' ? '財經' :
+               article.category === 'podcast' ? '播客' : '新聞'}
+            </div>
+            <div className="cover-date">
+              {formatChineseDate(article.date || article.created_at)}
+            </div>
             {article.image_url ? (
               <img 
                 src={getImageUrl(article.image_url)}

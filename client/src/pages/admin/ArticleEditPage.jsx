@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { articleApi } from '../../services/api';
+import { articleApi, categoryApi } from '../../services/api';
 import ImageUploader from '../../components/admin/ImageUploader';
 import ImageEditorModal from '../../components/admin/ImageEditorModal';
 import ImageInsertModal from '../../components/admin/ImageInsertModal';
@@ -110,6 +110,8 @@ const ArticleEditPage = () => {
   const [error, setError] = useState('');
   const quillRef = useRef(null);
   const [quillLoaded, setQuillLoaded] = useState(false);
+  // 添加分类列表状态
+  const [categories, setCategories] = useState([]);
   
   // 添加原始碼編輯相關狀態
   const [isSourceMode, setIsSourceMode] = useState(false);
@@ -136,6 +138,9 @@ const ArticleEditPage = () => {
     if (id) {
       loadArticle();
     }
+    
+    // 加载分类列表
+    loadCategories();
     
     // 组件卸载时清理Quill编辑器
     return () => {
@@ -659,6 +664,20 @@ const ArticleEditPage = () => {
     }
   };
 
+  // 加载分类数据
+  const loadCategories = async () => {
+    try {
+      const response = await categoryApi.getAll();
+      if (response && response.success) {
+        setCategories(response.data || []);
+      } else {
+        console.error('获取分类失败:', response?.message);
+      }
+    } catch (err) {
+      console.error('加载分类错误:', err);
+    }
+  };
+
   // 在内容部分渲染React-Quill或替代内容
   const renderEditor = () => {
     if (!quillLoaded) {
@@ -769,10 +788,20 @@ const ArticleEditPage = () => {
               value={article.category}
               onChange={handleInputChange}
             >
-              <option value="news">新闻</option>
-              <option value="people">人物</option>
-              <option value="culture">文化</option>
-              <option value="lifestyle">生活方式</option>
+              {categories.length > 0 ? (
+                categories.map(category => (
+                  <option key={category.id} value={category.name}>
+                    {category.displayName}
+                  </option>
+                ))
+              ) : (
+                <>
+                  <option value="news">新闻</option>
+                  <option value="people">人物</option>
+                  <option value="culture">文化</option>
+                  <option value="lifestyle">生活方式</option>
+                </>
+              )}
             </select>
           </div>
 

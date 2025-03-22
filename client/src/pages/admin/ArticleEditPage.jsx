@@ -111,6 +111,10 @@ const ArticleEditPage = () => {
   const quillRef = useRef(null);
   const [quillLoaded, setQuillLoaded] = useState(false);
   
+  // 添加原始碼編輯相關狀態
+  const [isSourceMode, setIsSourceMode] = useState(false);
+  const [sourceContent, setSourceContent] = useState('');
+  
   // 添加圖片編輯對話框相關狀態
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState({
@@ -408,11 +412,39 @@ const ArticleEditPage = () => {
   };
 
   const handleContentChange = (content) => {
-    console.log('Content changed:', content);
-    setArticle(prev => ({
-      ...prev,
-      content
-    }));
+    // 如果不是原始碼模式，正常更新內容
+    if (!isSourceMode) {
+      setArticle({ ...article, content });
+    }
+  };
+
+  const handleSourceChange = (e) => {
+    const newSourceContent = e.target.value;
+    setSourceContent(newSourceContent);
+  };
+
+  const toggleEditMode = () => {
+    if (isSourceMode) {
+      // 從原始碼模式切換到富文本模式
+      // 更新文章內容為原始碼編輯區的內容
+      setArticle({ ...article, content: sourceContent });
+      setIsSourceMode(false);
+    } else {
+      // 從富文本模式切換到原始碼模式
+      // 將當前內容複製到原始碼編輯區
+      setSourceContent(article.content);
+      setIsSourceMode(true);
+    }
+  };
+
+  const applySourceChanges = () => {
+    setArticle({ ...article, content: sourceContent });
+    setIsSourceMode(false);
+  };
+
+  const cancelSourceEdit = () => {
+    setSourceContent(article.content);
+    setIsSourceMode(false);
   };
 
   const handleTagsChange = (e) => {
@@ -792,9 +824,46 @@ const ArticleEditPage = () => {
 
           <div className="form-group">
             <label htmlFor="content">内容</label>
-            <div className="editor-container" style={{ height: '400px', marginBottom: '20px' }}>
-              {renderEditor()}
+            <div className="editor-controls">
+              <button 
+                type="button" 
+                className={`source-toggle-btn ${isSourceMode ? 'active' : ''}`}
+                onClick={toggleEditMode}
+              >
+                {isSourceMode ? '所見即所得編輯' : '查看/編輯原始碼'}
+              </button>
             </div>
+            
+            {isSourceMode ? (
+              <div className="source-editor-container">
+                <textarea
+                  className="source-editor"
+                  value={sourceContent}
+                  onChange={handleSourceChange}
+                  rows="20"
+                ></textarea>
+                <div className="source-editor-controls">
+                  <button 
+                    type="button" 
+                    className="apply-btn"
+                    onClick={applySourceChanges}
+                  >
+                    應用更改
+                  </button>
+                  <button 
+                    type="button" 
+                    className="cancel-btn"
+                    onClick={cancelSourceEdit}
+                  >
+                    取消
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="editor-container" style={{ height: '400px', marginBottom: '20px' }}>
+                {renderEditor()}
+              </div>
+            )}
           </div>
 
           <div className="form-group">

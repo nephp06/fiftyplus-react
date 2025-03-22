@@ -1,18 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import UnsplashImage from '../components/UnsplashImage';
 import { formatViews, formatNumber } from '../utils/format';
 import { getImageUrl } from '../utils/imageUtils';
+import { authApi } from '../services/api';
 import './ArticlePage.css';
 
 const ArticlePage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // 检查用户是否是管理员
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        
+        if (!token) {
+          setIsAdmin(false);
+          return;
+        }
+        
+        const userRole = localStorage.getItem('userRole');
+        
+        // 如果已保存角色資訊，則直接使用
+        if (userRole) {
+          setIsAdmin(userRole === 'admin' || userRole === 'editor');
+          return;
+        }
+        
+        // 如果沒有保存角色資訊，則從服務器獲取當前用戶信息
+        try {
+          const currentUser = await authApi.getCurrentUser();
+          if (currentUser.success && currentUser.data && currentUser.data.role) {
+            localStorage.setItem('userRole', currentUser.data.role);
+            setIsAdmin(currentUser.data.role === 'admin' || currentUser.data.role === 'editor');
+          }
+        } catch (err) {
+          console.error('獲取用戶信息失敗:', err);
+          setIsAdmin(false);
+        }
+      } catch (err) {
+        console.error('檢查管理員權限時出錯:', err);
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdminStatus();
+  }, []);
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -36,6 +78,11 @@ const ArticlePage = () => {
 
     fetchArticle();
   }, [id]);
+
+  // 處理編輯按鈕點擊
+  const handleEditClick = () => {
+    navigate(`/admin/articles/edit/${id}`);
+  };
 
   if (loading) {
     return (
@@ -85,6 +132,18 @@ const ArticlePage = () => {
           <span className="separator">/</span>
           <span className="current">文章</span>
         </div>
+        
+        {/* 管理員編輯按鈕 */}
+        {isAdmin && (
+          <div className="admin-actions">
+            <button 
+              className="edit-article-btn" 
+              onClick={handleEditClick}
+            >
+              編輯文章
+            </button>
+          </div>
+        )}
         
         <main className="article-main">
           <h1 className="article-title">{article.title}</h1>

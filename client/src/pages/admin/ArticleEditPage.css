@@ -118,11 +118,17 @@
 
 .cover-preview {
   max-width: 100%;
-  max-height: 300px;
+  max-height: 200px;
+  border: 1px solid #ddd;
   border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
   object-fit: contain;
   background-color: #f0f0f0;
+}
+
+.cover-preview:hover {
+  border-color: #0073aa;
+  box-shadow: 0 0 5px rgba(0, 115, 170, 0.5);
 }
 
 .empty-preview {
@@ -234,4 +240,22 @@
 /* 给可调整的图片添加边框，表示它们是可调整的 */
 .quill .ql-editor img.is-selected {
   border: 2px solid #007bff;
+}
+
+/* 圖片編輯按鈕樣式 */
+.edit-cover-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: #0073aa;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s;
+}
+
+.edit-cover-btn:hover {
+  background-color: #005a87;
 } 

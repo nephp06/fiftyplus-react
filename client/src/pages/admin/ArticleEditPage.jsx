@@ -60,6 +60,10 @@ const ArticleEditPage = () => {
     width: '',
     height: ''
   });
+  
+  // 封面圖片編輯相關狀態
+  const [isCoverModalOpen, setIsCoverModalOpen] = useState(false);
+  const [coverImageSize, setCoverImageSize] = useState({ width: '', height: '' });
 
   useEffect(() => {
     if (id) {
@@ -266,10 +270,64 @@ const ArticleEditPage = () => {
       ...prev,
       coverImage: imageUrl
     }));
+    
+    // 獲取並保存上傳圖片的尺寸
+    if (imageUrl) {
+      const img = new Image();
+      img.onload = () => {
+        setCoverImageSize({
+          width: img.width,
+          height: img.height
+        });
+        console.log('上傳圖片尺寸:', img.width, 'x', img.height);
+      };
+      img.src = getImageUrl(imageUrl);
+    }
   };
 
   const handleImageError = (error) => {
     setError(`图片上传失败: ${error}`);
+  };
+
+  // 處理封面圖片更新
+  const handleCoverImageUpdate = (imageData) => {
+    if (imageData.src) {
+      setArticle(prev => ({
+        ...prev,
+        coverImage: imageData.src
+      }));
+      
+      // 保存圖片尺寸信息，用於後續使用
+      setCoverImageSize({
+        width: imageData.width,
+        height: imageData.height
+      });
+    }
+  };
+
+  // 打開封面圖片編輯對話框
+  const openCoverImageEditor = () => {
+    // 在打開對話框前先獲取圖片尺寸
+    if (article.coverImage) {
+      const img = new Image();
+      img.onload = () => {
+        console.log('獲取封面圖片尺寸成功:', img.width, 'x', img.height);
+        setCoverImageSize({
+          width: img.width,
+          height: img.height
+        });
+        // 設置尺寸後再打開對話框
+        setIsCoverModalOpen(true);
+      };
+      img.onerror = () => {
+        console.error('獲取封面圖片尺寸失敗');
+        // 即使獲取失敗也打開對話框
+        setIsCoverModalOpen(true);
+      };
+      img.src = getImageUrl(article.coverImage);
+    } else {
+      setIsCoverModalOpen(true);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -495,6 +553,8 @@ const ArticleEditPage = () => {
                     src={getImageUrl(article.coverImage)}
                     alt="封面預覽" 
                     className="cover-preview" 
+                    style={{ cursor: 'pointer' }}
+                    onClick={openCoverImageEditor}
                     onError={(e) => {
                       console.log('圖片載入失敗，路徑:', e.target.src);
                       e.target.onerror = null;
@@ -504,6 +564,13 @@ const ArticleEditPage = () => {
                   <div style={{marginTop: "5px", fontSize: "12px", color: "#666"}}>
                     圖片原始路徑: {article.coverImage}<br/>
                     圖片顯示路徑: {getImageUrl(article.coverImage)}
+                    <button 
+                      type="button" 
+                      className="edit-cover-btn"
+                      onClick={openCoverImageEditor}
+                    >
+                      編輯封面圖片
+                    </button>
                   </div>
                 </>
               ) : (
@@ -563,7 +630,7 @@ const ArticleEditPage = () => {
           </div>
         </form>
 
-        {/* 添加圖片編輯對話框 */}
+        {/* 圖片編輯對話框 */}
         <ImageEditorModal 
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -571,6 +638,16 @@ const ArticleEditPage = () => {
           imageUrl={currentImage.src}
           width={currentImage.width}
           height={currentImage.height}
+        />
+        
+        {/* 封面圖片編輯對話框 */}
+        <ImageEditorModal 
+          isOpen={isCoverModalOpen}
+          onClose={() => setIsCoverModalOpen(false)}
+          onSave={handleCoverImageUpdate}
+          imageUrl={article.coverImage}
+          width={coverImageSize.width}
+          height={coverImageSize.height}
         />
       </div>
     </AdminLayout>

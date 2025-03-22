@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { authApi } from '../services/api';
 import './AdminLogin.css';
 
 const AdminLogin = () => {
@@ -33,25 +34,28 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-      console.log('登录响应:', data);
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || '登录失败');
+      // 使用 authApi 進行登錄
+      const result = await authApi.login(formData);
+      
+      console.log('登錄響應:', result);
+      
+      if (!result.success) {
+        throw new Error(result.message || '登錄失敗');
       }
-
-      // 保存令牌到本地存储
-      localStorage.setItem('token', data.data.token);
-      console.log('登录成功，令牌已保存');
-
+      
+      // 保存令牌到本地存儲
+      localStorage.setItem('token', result.data.token);
+      console.log('令牌已保存:', result.data.token);
+      
+      // 保存用戶角色到本地存儲
+      if (result.data.user && result.data.user.role) {
+        localStorage.setItem('userRole', result.data.user.role);
+        console.log('用戶角色已保存:', result.data.user.role);
+      } else if (result.data.role) {
+        localStorage.setItem('userRole', result.data.role);
+        console.log('用戶角色已保存(從data.role):', result.data.role);
+      }
+      
       // 重定向到管理面板
       navigate('/admin');
     } catch (err) {
@@ -68,30 +72,33 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(registrationData),
-      });
-
-      const data = await response.json();
-      console.log('注册响应:', data);
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || '注册失败');
+      // 使用 authApi 進行註冊
+      const result = await authApi.register(registrationData);
+      
+      console.log('註冊響應:', result);
+      
+      if (!result.success) {
+        throw new Error(result.message || '註冊失敗');
       }
-
-      // 保存令牌到本地存储
-      localStorage.setItem('token', data.data.token);
-      console.log('注册成功，令牌已保存');
-
+      
+      // 保存令牌到本地存儲
+      localStorage.setItem('token', result.data.token);
+      console.log('令牌已保存:', result.data.token);
+      
+      // 保存用戶角色到本地存儲
+      if (result.data.user && result.data.user.role) {
+        localStorage.setItem('userRole', result.data.user.role);
+        console.log('用戶角色已保存:', result.data.user.role);
+      } else if (result.data.role) {
+        localStorage.setItem('userRole', result.data.role);
+        console.log('用戶角色已保存(從data.role):', result.data.role);
+      }
+      
       // 重定向到管理面板
       navigate('/admin');
     } catch (err) {
-      console.error('注册错误:', err);
-      setError(err.message || '注册时出错');
+      console.error('註冊錯誤:', err);
+      setError(err.message || '註冊時出錯');
     } finally {
       setIsLoading(false);
     }

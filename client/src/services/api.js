@@ -30,6 +30,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
+      localStorage.removeItem('userRole');
       window.location.href = '/admin/login';
     }
     return Promise.reject(error.response?.data || error);
@@ -65,11 +66,18 @@ export const authApi = {
   },
 
   getCurrentUser: async () => {
-    return api.get('/auth/me');
+    try {
+      const response = await api.get('/auth/me');
+      return response;
+    } catch (error) {
+      console.error('獲取當前用戶信息失敗:', error);
+      return { success: false, message: error.message };
+    }
   },
 
   logout: async () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('userRole');
     window.location.href = '/admin/login';
   },
 };

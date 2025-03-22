@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage.jsx';
 import PeoplePage from './pages/PeoplePage.jsx';
@@ -11,6 +11,7 @@ import CategoryPage from './pages/admin/CategoryPage';
 import UserPage from './pages/admin/UserPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import AdminLayout from './layouts/AdminLayout/AdminLayout';
+import { authApi } from './services/api';
 import './App.css';
 
 // 健康檢查頁面組件
@@ -34,6 +35,35 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
+  // 在應用啟動時檢查用戶身份
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        return;
+      }
+      
+      try {
+        // 嘗試獲取當前用戶信息
+        const result = await authApi.getCurrentUser();
+        
+        if (result.success && result.data && result.data.role) {
+          // 保存或更新用戶角色
+          localStorage.setItem('userRole', result.data.role);
+        } else {
+          // 如果獲取失敗，清除存儲的登錄信息
+          localStorage.removeItem('token');
+          localStorage.removeItem('userRole');
+        }
+      } catch (error) {
+        console.error('檢查身份驗證狀態時出錯:', error);
+      }
+    };
+    
+    checkAuthStatus();
+  }, []);
+
   return (
     <div className='app'>
       <Routes>

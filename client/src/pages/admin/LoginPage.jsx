@@ -54,7 +54,7 @@ const LoginPage = () => {
   return (
     <div className="login-page">
       <div className="login-container">
-        <h1>FiftyPlus CMS</h1>
+        <h1>HeartWise CMS</h1>
         <h2>管理员登录</h2>
         
         {error && (

@@ -104,7 +104,7 @@ export const formatUnsplashUrl = (url, width, height) => {
     console.warn('No URL provided to formatUnsplashUrl');
     return `https://via.placeholder.com/${width || 800}x${
       height || 600
-    }?text=FiftyPlus`;
+    }?text=HeartWise`;
   }
 
   try {
@@ -120,6 +120,6 @@ export const formatUnsplashUrl = (url, width, height) => {
     console.error('Error formatting Unsplash URL:', error);
     return `https://via.placeholder.com/${width || 800}x${
       height || 600
-    }?text=FiftyPlus`;
+    }?text=HeartWise`;
   }
 };

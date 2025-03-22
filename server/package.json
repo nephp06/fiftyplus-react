@@ -1,7 +1,7 @@
 {
-  "name": "fiftyplus-cms-server",
+  "name": "heartwise-cms-server",
   "version": "1.0.0",
-  "description": "FiftyPlus CMS后端服务",
+  "description": "HeartWise CMS后端服务",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",

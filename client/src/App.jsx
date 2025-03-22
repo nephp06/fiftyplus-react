@@ -3,8 +3,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage.jsx';
 import PeoplePage from './pages/PeoplePage.jsx';
 import AcademyPage from './pages/AcademyPage.jsx';
-import MindPage from './pages/MindPage.jsx';
-import LifestylePage from './pages/LifestylePage.jsx';
 import ArticlePage from './pages/ArticlePage.jsx';
 import AdminLogin from './pages/AdminLogin';
 import DashboardPage from './pages/admin/DashboardPage';
@@ -74,8 +72,6 @@ function App() {
         <Route path='/' element={<HomePage />} />
         <Route path='/people' element={<PeoplePage />} />
         <Route path='/academy' element={<AcademyPage />} />
-        <Route path='/mind' element={<MindPage />} />
-        <Route path='/lifestyle' element={<LifestylePage />} />
         <Route path='/article/:id' element={<ArticlePage />} />
         
         {/* 健康檢查路由 */}

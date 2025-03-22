@@ -25,7 +25,7 @@ const AdminLayout = ({ children }) => {
             <span></span>
             <span></span>
           </button>
-          <h1>FiftyPlus CMS</h1>
+          <h1>HeartWise CMS</h1>
         </div>
         <div className="admin-header-right">
           <Link to="/" className="home-button">

@@ -132,9 +132,6 @@ const PeoplePage = () => {
             {currentArticles.map((article) => (
               <li key={article.id} className="article-item">
                 <div className="article-thumb">
-                  <div className="article-date-overlay">
-                    {article.created_at ? formatDate(article.created_at) : article.date || '無日期'}
-                  </div>
                   <Link to={`/article/${article.id}`}>
                     {article.image_url ? (
                       <img
@@ -173,6 +170,9 @@ const PeoplePage = () => {
                 </div>
                 
                 <div className="article-info">
+                  <div className="article-date">
+                    {article.created_at ? formatDate(article.created_at) : article.date || '無日期'}
+                  </div>
                   <Link to={`/article/${article.id}`} className="article-title-link">
                     <h2 className="article-title">{article.title}</h2>
                   </Link>

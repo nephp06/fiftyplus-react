@@ -17,10 +17,10 @@ const Footer = () => {
         <div className='footer-top'>
           <div className='footer-logo'>
             <Link to='/' className='logo'>
-              <span className='logo-fifty'>50+</span>{' '}
-              <span className='logo-plus'>FiftyPlus</span>
+              <span className='logo-heart'>Heart</span>{' '}
+              <span className='logo-wise'>Wise</span>
             </Link>
-            <p className='tagline'>你的第二人生，精彩待續</p>
+            <p className='tagline'>從心出發，精彩續寫人生新篇</p>
           </div>
 
           <div className='footer-links'>
@@ -68,7 +68,7 @@ const Footer = () => {
 
         <div className='footer-bottom'>
           <div className='copyright'>© 2025 遠見天下文化出版股份有限公司</div>
-          <div className='contact-email'>服務信箱：50plus@cwgv.com.tw</div>
+          <div className='contact-email'>服務信箱：heartwise@cwgv.com.tw</div>
         </div>
       </div>
     </footer>

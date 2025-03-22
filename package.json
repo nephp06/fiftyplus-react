@@ -1,7 +1,7 @@
 {
-  "name": "fiftyplus-cms",
+  "name": "heartwise-cms",
   "version": "1.0.0",
-  "description": "FiftyPlus CMS - A content management system",
+  "description": "HeartWise CMS - A content management system",
   "scripts": {
     "client": "cd client && npm run dev",
     "server": "cd server && npm run dev",

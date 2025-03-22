@@ -91,7 +91,7 @@ const UnsplashImage = ({ category, width, height, alt, className }) => {
       console.error('Error setting image:', err);
       setError(true);
       // 使用占位图作为备用
-      setImageUrl(`https://placehold.co/${width || 800}x${height || 600}/gray/white?text=FiftyPlus`);
+      setImageUrl(`https://placehold.co/${width || 800}x${height || 600}/gray/white?text=HeartWise`);
     }
 
     // 短暂延迟以允许图片加载

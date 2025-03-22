@@ -14,7 +14,7 @@ const DEFAULT_SLIDES = [
   {
     id: 1,
     imageUrl: 'https://source.unsplash.com/random/1600x900/?retirement',
-    title: '退休後的第二人生：探索新的可能',
+    title: '從心出發：探索熟齡生活的無限可能',
     subtitle: '人生的下半場，我們有更多時間來追求自己真正熱愛的事物',
     category: '生活',
     url: '/article/1'

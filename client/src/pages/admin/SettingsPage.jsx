@@ -4,9 +4,9 @@ import './SettingsPage.css';
 
 const SettingsPage = () => {
   const [settings, setSettings] = useState({
-    siteName: 'FiftyPlus',
-    siteDescription: '五十加 - 为熟龄人士提供优质内容的在线平台',
-    contactEmail: 'info@fiftyplus.com',
+    siteName: 'HeartWise',
+    siteDescription: 'HeartWise - 从心出发，精彩续写人生新篇',
+    contactEmail: 'info@heartwise.com',
     articlesPerPage: 10,
     enableComments: true,
     maintenance: false,
@@ -53,9 +53,9 @@ const SettingsPage = () => {
   const resetToDefaults = () => {
     if (window.confirm('确定要重置所有设置到默认值吗？')) {
       setSettings({
-        siteName: 'FiftyPlus',
-        siteDescription: '五十加 - 为熟龄人士提供优质内容的在线平台',
-        contactEmail: 'info@fiftyplus.com',
+        siteName: 'HeartWise',
+        siteDescription: 'HeartWise - 从心出发，精彩续写人生新篇',
+        contactEmail: 'info@heartwise.com',
         articlesPerPage: 10,
         enableComments: true,
         maintenance: false,

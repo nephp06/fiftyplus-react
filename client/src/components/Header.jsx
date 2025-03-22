@@ -19,8 +19,8 @@ const Header = () => {
       <div className='header-container'>
         <div className='logo-container'>
           <Link to='/' className='logo'>
-            <span className='logo-fifty'>50+</span>{' '}
-            <span className='logo-plus'>FiftyPlus</span>
+            <span className='logo-heart'>Heart</span>
+            <span className='logo-wise'>Wise</span>
           </Link>
         </div>
 

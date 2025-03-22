@@ -1,4 +1,4 @@
-# FiftyPlus CMS
+# HeartWise CMS
 
 一个基于 React 和 Express 的内容管理系统。
 

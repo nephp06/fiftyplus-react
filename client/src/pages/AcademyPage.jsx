@@ -92,10 +92,10 @@ const AcademyPage = () => {
   );
 
   return (
-    <div className="academy-page">
+    <div className="mind-page academy-page">
       <Header />
       
-      <div className="academy-content container">
+      <div className="mind-content container">
         <div className="breadcrumb">
           <Link to="/">首頁</Link>
           <span className="separator">/</span>
@@ -128,7 +128,7 @@ const AcademyPage = () => {
         ) : academyArticles.length === 0 ? (
           <div className="empty-message">暫無學院文章</div>
         ) : (
-          <ul className="academy-articles">
+          <ul className="mind-articles">
             {currentArticles.map((article) => (
               <li key={article.id} className="article-item">
                 <div className="article-thumb">
@@ -149,9 +149,9 @@ const AcademyPage = () => {
                           // 這裡我們需要使用React的方式來渲染UnsplashImage組件
                           ReactDOM.render(
                             <UnsplashImage
-                              category={article.image_category || 'education,academy'}
-                              width={350}
-                              height={240}
+                              category={article.category || 'academy'}
+                              width={300}
+                              height={180}
                               alt={article.title}
                             />,
                             unsplashImg
@@ -159,74 +159,75 @@ const AcademyPage = () => {
                         }}
                       />
                     ) : (
-                      <UnsplashImage 
-                        category={article.image_category || article.imageCategory || 'education,academy'} 
-                        width={350} 
-                        height={240} 
-                        alt={article.title} 
+                      <UnsplashImage
+                        category={article.category || 'academy'}
+                        width={300}
+                        height={180}
+                        alt={article.title}
                       />
                     )}
                   </Link>
                 </div>
                 
                 <div className="article-info">
-                  <div className="article-date">
-                    {article.created_at ? formatDate(article.created_at) : article.date || '無日期'}
-                  </div>
-                  <Link to={`/article/${article.id}`} className="article-title-link">
-                    <h2 className="article-title">{article.title}</h2>
-                  </Link>
+                  <h2 className="article-title">
+                    <Link to={`/article/${article.id}`}>{article.title}</Link>
+                  </h2>
                   
-                  <ul className="article-meta">
-                    <li className="article-views">
-                      <i className="icon-view"></i> {formatViews(article.views)}
-                    </li>
-                  </ul>
+                  <div className="article-meta">
+                    <span className="article-date">
+                      {formatDate(article.date || article.created_at)}
+                    </span>
+                    <span className="article-views">
+                      <i className="fas fa-eye"></i> {formatViews(article.views)}
+                    </span>
+                  </div>
+                  
+                  <p className="article-summary">
+                    {article.summary || article.content.substring(0, 150) + '...'}
+                  </p>
+                  
+                  <Link to={`/article/${article.id}`} className="read-more">
+                    繼續閱讀
+                  </Link>
                 </div>
               </li>
             ))}
           </ul>
         )}
         
-        {totalPages > 1 && (
+        {/* 分页控制 */}
+        {!loading && !error && academyArticles.length > 0 && (
           <div className="pagination">
-            {currentPage > 1 && (
-              <span 
-                className="pagination-arrow prev" 
-                onClick={() => handlePageChange(currentPage - 1)}
-              >
-                上一頁
-              </span>
-            )}
-            
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <span
-                key={page}
-                className={`pagination-number ${page === currentPage ? 'active' : ''}`}
-                onClick={() => handlePageChange(page)}
-              >
-                {page}
-              </span>
-            ))}
-            
-            {currentPage < totalPages && (
-              <span 
-                className="pagination-arrow next" 
-                onClick={() => handlePageChange(currentPage + 1)}
-              >
-                下一頁
-              </span>
-            )}
-            
-            <span 
-              className="pagination-arrow last" 
-              onClick={() => handlePageChange(totalPages)}
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="page-btn prev"
             >
-              最後一頁
-            </span>
+              上一頁
+            </button>
+            
+            <div className="page-numbers">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={`page-btn ${currentPage === page ? 'active' : ''}`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+            
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="page-btn next"
+            >
+              下一頁
+            </button>
           </div>
         )}
-        
       </div>
       
       <Footer />

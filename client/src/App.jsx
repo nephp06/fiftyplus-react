@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage.jsx';
+import PodcastPage from './pages/PodcastPage.jsx';
 import PeoplePage from './pages/PeoplePage.jsx';
 import AcademyPage from './pages/AcademyPage.jsx';
 import MindPage from './pages/MindPage.jsx';
@@ -83,6 +84,7 @@ function App() {
         <Route path='/finance' element={<FinancePage />} />
         <Route path='/about' element={<AboutPage />} />
         <Route path='/article/:id' element={<ArticlePage />} />
+        <Route path='/podcast' element={<PodcastPage />} />
         
         {/* 健康檢查路由 */}
         <Route path='/health-check' element={<HealthCheck />} />

@@ -12,16 +12,16 @@ const seedDatabase = require('./config/seedData');
 
 const app = express();
 
-// 中间件配置
+// 中間件配置
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.use(morgan('dev')); // 日志中间件
+app.use(morgan('dev')); // 日誌中間件
 
-// 静态文件服务
+// 靜態文件服務
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// 设置CORS
+// 設置CORS
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -32,9 +32,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// 简单API测试路由
+// 簡單API測試路由
 app.get('/api/test', (req, res) => {
-  res.json({ message: '服务器正常运行' });
+  res.json({ message: '服務器正常運行' });
 });
 
 // 健康檢查API
@@ -55,41 +55,41 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/users', userRoutes);
 app.use('/api/upload', uploadRoutes);
 
-// 404处理
+// 404處理
 app.use((req, res) => {
   res.status(404).json({
-    message: '请求的资源不存在',
+    message: '請求的資源不存在',
   });
 });
 
-// 错误处理中间件
+// 錯誤處理中間件
 app.use((err, req, res, next) => {
-  console.error('服务器错误:', err);
+  console.error('服務器錯誤:', err);
   res.status(500).json({
-    message: '服务器内部错误',
+    message: '服務器內部錯誤',
   });
 });
 
-// 启动服务器
+// 啟動服務器
 const startServer = async () => {
   try {
     await sequelize.authenticate();
-    console.log('数据库连接成功');
+    console.log('數據庫連接成功');
 
-    // 同步数据库模型
+    // 同步數據庫模型
     await sequelize.sync({ alter: false });
     console.log('數據庫同步完成，保留現有數據');
 
-    // 添加初始用户和文章数据
+    // 添加初始用戶和文章數據
     await seedDatabase();
 
-    // 启动服务器
+    // 啟動服務器
     const PORT = process.env.PORT || 5003;
     app.listen(PORT, () => {
-      console.log(`服务器运行在端口 ${PORT}`);
+      console.log(`服務器運行在端口 ${PORT}`);
     });
   } catch (error) {
-    console.error('服务器启动失败:', error);
+    console.error('服務器啟動失敗:', error);
   }
 };
 

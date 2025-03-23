@@ -6,17 +6,17 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
 
-  // 关闭菜单函数
+  // 關閉菜單函數
   const closeMenu = () => {
     setMenuOpen(false);
   };
 
-  // 切换菜单开关状态
+  // 切換菜單開關狀態
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
-  // 当路由变化时自动关闭菜单
+  // 當路由變化時自動關閉菜單
   useEffect(() => {
     closeMenu();
   }, [location]);

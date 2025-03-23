@@ -57,10 +57,10 @@ const AdminLogin = () => {
       }
       
       // 重定向到管理面板
-      navigate('/admin');
+      navigate('/admin/dashboard');
     } catch (err) {
-      console.error('登录错误:', err);
-      setError(err.message || '登录时出错');
+      console.error('登錄錯誤:', err);
+      setError(err.message || '登錄失敗');
     } finally {
       setIsLoading(false);
     }
@@ -95,10 +95,10 @@ const AdminLogin = () => {
       }
       
       // 重定向到管理面板
-      navigate('/admin');
+      navigate('/admin/dashboard');
     } catch (err) {
       console.error('註冊錯誤:', err);
-      setError(err.message || '註冊時出錯');
+      setError(err.message || '註冊失敗');
     } finally {
       setIsLoading(false);
     }
@@ -107,7 +107,7 @@ const AdminLogin = () => {
   return (
     <div className="admin-login-container">
       <div className="admin-login-card">
-        <h1>管理员{showRegister ? '注册' : '登录'}</h1>
+        <h1>管理員{showRegister ? '註冊' : '登錄'}</h1>
         
         {error && <div className="error-message">{error}</div>}
         

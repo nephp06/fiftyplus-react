@@ -10,7 +10,7 @@ const api = axios.create({
   },
 });
 
-// 请求拦截器：添加token
+// 請求攔截器：添加token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -24,7 +24,7 @@ api.interceptors.request.use(
   }
 );
 
-// 响应拦截器：处理错误
+// 響應攔截器：處理錯誤
 api.interceptors.response.use(
   (response) => response.data,
   (error) => {
@@ -37,18 +37,18 @@ api.interceptors.response.use(
   }
 );
 
-// 处理API响应
+// 處理API響應
 const handleResponse = async (response) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || '请求失败');
+    throw new Error(data.message || '請求失敗');
   }
 
   return data;
 };
 
-// 认证相关API
+// 認證相關API
 export const authApi = {
   login: async (credentials) => {
     return api.post('/auth/login', credentials);
@@ -82,7 +82,7 @@ export const authApi = {
   },
 };
 
-// 文章相关API
+// 文章相關API
 export const articleApi = {
   getAll: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
@@ -148,7 +148,7 @@ export const articleApi = {
   },
 };
 
-// 管理面板相关API
+// 管理面板相關API
 export const adminApi = {
   getDashboardData: async () => {
     return api.get('/admin/dashboard');
@@ -159,7 +159,7 @@ export const adminApi = {
   },
 };
 
-// 分类相关API
+// 分類相關API
 export const categoryApi = {
   getAll: async () => {
     return api.get('/categories');
@@ -182,7 +182,7 @@ export const categoryApi = {
   },
 };
 
-// 上传相关API
+// 上傳相關API
 export const uploadApi = {
   uploadImage: async (file) => {
     const formData = new FormData();

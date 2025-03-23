@@ -32,7 +32,7 @@ const HealthCheck = () => {
   );
 };
 
-// 保护路由组件
+// 保護路由組件
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('token');
   if (!token) {
@@ -89,7 +89,7 @@ function App() {
         {/* 健康檢查路由 */}
         <Route path='/health-check' element={<HealthCheck />} />
         
-        {/* 后台路由 */}
+        {/* 後台路由 */}
         <Route path='/admin/login' element={<AdminLogin />} />
         
         {/* 管理面板路由 - 直接路由 */}
@@ -117,28 +117,28 @@ function App() {
           </ProtectedRoute>
         } />
         
-        {/* 分类管理路由 */}
+        {/* 分類管理路由 */}
         <Route path='/admin/categories' element={
           <ProtectedRoute>
             <CategoryPage />
           </ProtectedRoute>
         } />
         
-        {/* 用户管理路由 */}
+        {/* 用戶管理路由 */}
         <Route path='/admin/users' element={
           <ProtectedRoute>
             <UserPage />
           </ProtectedRoute>
         } />
         
-        {/* 系统设置路由 */}
+        {/* 系統設置路由 */}
         <Route path='/admin/settings' element={
           <ProtectedRoute>
             <SettingsPage />
           </ProtectedRoute>
         } />
         
-        {/* 默认管理面板入口 */}
+        {/* 默認管理面板入口 */}
         <Route path='/admin' element={
           <ProtectedRoute>
             <Navigate to="/admin/dashboard" replace />

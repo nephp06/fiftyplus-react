@@ -13,7 +13,7 @@ const PeoplePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 从服务器获取人物类别文章
+  // 從服務器獲取人物類別文章
   useEffect(() => {
     const fetchPeopleArticles = async () => {
       try {

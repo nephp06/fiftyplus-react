@@ -9,7 +9,7 @@ import './HomePage.css';
 import { Link } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 
-// 默认轮播图数据（備用）
+// 默認輪播圖數據（備用）
 const DEFAULT_SLIDES = [
   {
     id: 1,
@@ -92,53 +92,53 @@ const HomePage = () => {
   const [articles, setArticles] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [featuredSlides, setFeaturedSlides] = useState(DEFAULT_SLIDES); // 使用默认数据作為初始值
+  const [featuredSlides, setFeaturedSlides] = useState(DEFAULT_SLIDES); // 使用默認數據作為初始值
 
   useEffect(() => {
     const fetchHomeData = async () => {
       try {
         setLoading(true);
-        console.log('开始获取首页数据...');
+        console.log('開始獲取首頁數據...');
         
         const response = await fetch('/api/homepage');
-        console.log('API响应状态:', response.status);
+        console.log('API響應狀態:', response.status);
         
         if (!response.ok) {
-          throw new Error(`获取数据失败: ${response.status}`);
+          throw new Error(`獲取數據失敗: ${response.status}`);
         }
         
         const responseText = await response.text();
-        console.log('API响应文本:', responseText);
+        console.log('API響應文本:', responseText);
         
         let data;
         try {
           data = JSON.parse(responseText);
-          console.log('API返回数据(解析后):', data);
-          console.log('API返回数据结构:', Object.keys(data));
+          console.log('API返回數據(解析後):', data);
+          console.log('API返回數據結構:', Object.keys(data));
           if (data.data) {
             console.log('實際數據位於data字段中，包含以下類別:', Object.keys(data.data));
             data = data.data; // 提取正確的數據結構
           }
         } catch (parseError) {
-          console.error('JSON解析错误:', parseError);
-          throw new Error('无法解析返回的JSON数据');
+          console.error('JSON解析錯誤:', parseError);
+          throw new Error('無法解析返回的JSON數據');
         }
         
-        // 验证返回的数据结构
+        // 驗證返回的數據結構
         if (!data || typeof data !== 'object') {
-          throw new Error('返回的数据格式不正确');
+          throw new Error('返回的數據格式不正確');
         }
         
-        console.log('人物文章数量:', data.people ? data.people.length : 0);
+        console.log('人物文章數量:', data.people ? data.people.length : 0);
         if (data.people && data.people.length > 0) {
           console.log('第一篇人物文章:', data.people[0]);
           console.log('第一篇人物文章標題:', data.people[0].title);
           console.log('第一篇人物文章圖片:', data.people[0].image_url);
           console.log('第一篇人物文章日期:', data.people[0].created_at || data.people[0].date);
         }
-        console.log('热门文章数量:', data.hot ? data.hot.length : 0);
+        console.log('熱門文章數量:', data.hot ? data.hot.length : 0);
         
-        // 安全设置文章数据
+        // 安全設置文章數據
         const articlesData = {
           people: Array.isArray(data.people) ? data.people : [],
           hot: Array.isArray(data.hot) ? data.hot : [],
@@ -167,8 +167,8 @@ const HomePage = () => {
         
         setError(null);
       } catch (err) {
-        console.error('获取数据错误:', err);
-        setError(err.message || '未知错误');
+        console.error('獲取數據錯誤:', err);
+        setError(err.message || '未知錯誤');
       } finally {
         setLoading(false);
       }
@@ -182,7 +182,7 @@ const HomePage = () => {
       <div className="homepage">
         <Header />
         <main className="main-content">
-          <div className="loading">加載中...</div>
+          <div className="loading">載入中...</div>
         </main>
         <Footer />
       </div>
@@ -206,7 +206,7 @@ const HomePage = () => {
       <div className="homepage">
         <Header />
         <main className="main-content">
-          <div className="error-message">無法加載數據</div>
+          <div className="error-message">無法載入數據</div>
         </main>
         <Footer />
       </div>

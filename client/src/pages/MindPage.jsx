@@ -13,7 +13,7 @@ const MindPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 从服务器获取心靈类别文章
+  // 從服務器獲取心靈類別文章
   useEffect(() => {
     const fetchMindArticles = async () => {
       try {
